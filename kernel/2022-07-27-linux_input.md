@@ -94,16 +94,14 @@ readelf -S hello
 objdump -S hello
 ```
 
-参考链接：https://blog.csdn.net/weixin_47554309/article/details/120617975#t2
+​	参考链接：https://blog.csdn.net/weixin_47554309/article/details/120617975#t2
 
 ### gcc默认的链接脚本
-**链接脚本**
+**查看默认链接脚本**
 
 * gcc编译过程中，使用链接脚本对.o文件进行链接。
 * 可以我们自行指定链接脚本，内核使用vmlinux.lds指定；如果不指定，使用默认链接脚本。
 
-**查看gcc编译时使用默认链接脚本**
-=======
 * 查看gcc编译时使用的默认链接脚本
 ```c
 gcc test.c -Wl,--verbose
@@ -113,11 +111,15 @@ gcc test.c -Wl,--verbose
 
 ​						https://blog.csdn.net/Longyu_wlz/article/details/109007373
 
-### 修改gcc默认的链接脚本
+**修改g默认链接脚本**
 
-​	需要在链接时，使用ld -T来指定lds文件连接到一起。
+链接时，使用ld -T来指定lds文件将.o文件链接到一起
 
 ​	参考链接：https://zhidao.baidu.com/question/1738541555743407907.html
+
+一个实例：
+
+​	http://t.zoukankan.com/defen-p-5400492.html
 
 
 ## 内核链接脚本、映射文件
