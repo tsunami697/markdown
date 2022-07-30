@@ -7,7 +7,7 @@
 > 内核initcall
 
 
-## subsys_initcall机制
+## subsys_initcall(input_init)
 
 ###  代码
 
@@ -56,15 +56,19 @@ static initcall_t __initcall_input_init4
 
 
 
-### 调用
+### 调度
 
-#### kernel链接脚本
+#### kernel链接脚本加载initcall
 
 * kernel/include/asm-generic/vmlinux.lds.h
 
-* kernel/arch/arm64/kernel/vmlinux.lds
+* kernel/arch/arm64/kernel/vmlinux.lds.S
 
-#### kernel初始化---initcall加载
+    
+
+#### kernel对initcall加载
+
+
 
 ## gcc链接脚本
 
@@ -99,8 +103,8 @@ objdump -S hello
 ### gcc默认的链接脚本
 **查看默认链接脚本**
 
-* gcc编译过程中，使用链接脚本对.o文件进行链接。
-* 可以我们自行指定链接脚本，内核使用vmlinux.lds指定；如果不指定，使用默认链接脚本。
+* 前提：gcc编译过程中，使用链接脚本对.o文件进行链接。
+* 可以自行指定链接脚本，内核使用vmlinux.lds指定；如果不指定，使用默认链接脚本。
 
 * 查看gcc编译时使用的默认链接脚本
 ```c
@@ -111,9 +115,9 @@ gcc test.c -Wl,--verbose
 
 ​						https://blog.csdn.net/Longyu_wlz/article/details/109007373
 
-**修改g默认链接脚本**
+**修改gcc默认链接脚本**
 
-链接时，使用ld -T来指定lds文件将.o文件链接到一起
+在链接阶段时，使用ld -T来指定lds文件将.o文件链接到一起
 
 ​	参考链接：https://zhidao.baidu.com/question/1738541555743407907.html
 
@@ -124,12 +128,16 @@ gcc test.c -Wl,--verbose
 
 ## 内核链接脚本、映射文件
 
-* kernel/System.map
+* kernel/System.map：
 
-系统映射文件: 内核中重要的变量（函数，全局变量等）在内核中的运行地址！
+    系统映射文件，内核中重要的变量（函数，全局变量等）在内核中的运行地址。
 
 * kernel/arch/arm64/kernel/vmlinux.lds
 
+    kernel/arch/arm64/kernel/vmlinux.lds.S
+    
+    kernel/include/asm-generic/vmlinux.lds.h(vmlinux.lds.S包含的头文件)
+    
     vmlinux.lds，是Linux内核的链接脚本文件。用来分析Linux启动流程，通过链接脚本可以找到Linux内核第一行程序是从哪里执行。
 
 ### kernel启动流程的两个阶段
