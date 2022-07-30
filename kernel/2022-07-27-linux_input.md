@@ -1,20 +1,10 @@
----
-layout:     post   				    # 使用的布局（不需要改）
-title:      Kernel: xxx_initcall	# 标题 
-subtitle:   内核学习 				# 副标题
-date:       2022-07-27			  	# 时间
-author:     Qi						# 作者
-header-img: img/post-bg-2015.jpg 	# 这篇文章标题背景图片
-catalog: 	true 					# 是否归档
-tags:								# 标签
-    - kernel
----
-
 # input子系统
 
-> ​	subsys_initcall机制
-> ​	从init/mian初始化subsys
-> ​	内核initcall
+> subsys_initcall机制
+>
+> 从init/mian初始化subsys
+>
+> 内核initcall
 
 
 ## subsys_initcall机制
@@ -35,7 +25,8 @@ typedef int (*initcall_t)(void);
 				 static initcall_t __initcall_##fn##id
 		展开后为: static initcall_t __initcall_func4;
    3. __used、__attribute__:
-   		gun c使用__used、__attribute__设置变量的属性，定义在kernel/include/linux/compiler_types.h(内核头文件)。
+   		gun c使用__used、__attribute__设置变量的属性(gnu扩展语法)，
+   		定义在kernel/include/linux/compiler_types.h(内核头文件)。
 		used: 其作用是告诉编译器避免被链接器因为未用过而被优化掉。
 		attribute((section(“name”)))：将作用的函数或数据放入指定名为"section_name"对应的段中。
  */
@@ -63,38 +54,70 @@ static initcall_t __initcall_input_init4
     __uesd __attribute__((__section__(.initcall4.init))) = input_init;
 ```
 
-### 
+
 
 ### 调用
+
+#### kernel链接脚本
 
 * kernel/include/asm-generic/vmlinux.lds.h
 
 * kernel/arch/arm64/kernel/vmlinux.lds
 
+#### kernel初始化---initcall加载
+
 ## gcc链接脚本
 
 ### gcc编译过程
 
+下面总结了单步编译使用的gcc命令：
+
 ```
-编译：gcc -c -o main.o main.c
-链接：gcc -Ttext 0 main.
+# 1. 预处理
+gcc -E hello.c -o hello.i
+# 2. 编译阶段
+gcc -S hello.i -o hello.s
+# 3. 汇编
+gcc -c hello.s -o hello.o
+# 4. 链接
+# 静态链接
+gcc -static hello.c -o hello
+# 动态链接
+gcc hello.c -o hello
+# 查看链接
+ldd obj
+# 查看elf文件段分布
+size obj
+# 查看elf文件
+readelf -S hello
+# 反汇编elf
+objdump -S hello
 ```
 
-
+参考链接：https://blog.csdn.net/weixin_47554309/article/details/120617975#t2
 
 ### gcc默认的链接脚本
 
-* 查看gcc编译使用的默认链接脚本
+**链接脚本**
+
+* gcc编译过程中，使用链接脚本对.o文件进行链接。
+* 可以我们自行指定链接脚本；如果不指定，使用默认链接脚本。
+
+**查看gcc编译时使用默认链接脚本**
 
 ```c
 gcc test.c -Wl,--verbose
 ```
 
+​	参考链接：https://blog.csdn.net/Longyu_wlz/article/details/109007338#t3
 
+​						https://blog.csdn.net/Longyu_wlz/article/details/109007373
 
 ### 修改gcc默认的链接脚本
 
+​	需要在链接时，使用ld -T来指定lds文件连接到一起。
 
+​	参考链接：https://zhidao.baidu.com/question/1738541555743407907.html
 
 
 ## 内核链接脚本、映射文件
@@ -113,9 +136,7 @@ gcc test.c -Wl,--verbose
 
 * C语言阶段
 
-![image-20220728142339995](/home/ljq/.config/Typora/typora-user-images/image-20220728142339995.png)
 
-kernel对input_init调用流程：
 
-* 
+## kernel对input_init调用流程
 
