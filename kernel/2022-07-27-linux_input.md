@@ -1,20 +1,10 @@
----
-layout:     post   				    # 使用的布局（不需要改）
-title:      Kernel: xxx_initcall	# 标题 
-subtitle:   内核学习 				# 副标题
-date:       2022-07-27			  	# 时间
-author:     Qi						# 作者
-header-img: img/post-bg-2015.jpg 	# 这篇文章标题背景图片
-catalog: 	true 					# 是否归档
-tags:								# 标签
-    - kernel
----
-
 # input子系统
 
-> ​	subsys_initcall机制
-> ​	从init/mian初始化subsys
-> ​	内核initcall
+> subsys_initcall机制
+>
+> 从init/mian初始化subsys
+>
+> 内核initcall
 
 
 ## subsys_initcall机制
@@ -63,13 +53,17 @@ static initcall_t __initcall_input_init4
     __uesd __attribute__((__section__(.initcall4.init))) = input_init;
 ```
 
-### 
+
 
 ### 调用
+
+#### kernel链接脚本
 
 * kernel/include/asm-generic/vmlinux.lds.h
 
 * kernel/arch/arm64/kernel/vmlinux.lds
+
+#### kernel初始化---initcall加载
 
 ## gcc链接脚本
 
@@ -84,7 +78,7 @@ static initcall_t __initcall_input_init4
 
 ### gcc默认的链接脚本
 
-* 查看gcc编译使用的默认链接脚本
+* 查看gcc编译时使用的默认链接脚本
 
 ```c
 gcc test.c -Wl,--verbose
@@ -113,9 +107,7 @@ gcc test.c -Wl,--verbose
 
 * C语言阶段
 
-![image-20220728142339995](/home/ljq/.config/Typora/typora-user-images/image-20220728142339995.png)
 
-kernel对input_init调用流程：
 
-* 
+## kernel对input_init调用流程
 
