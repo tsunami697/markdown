@@ -9,6 +9,12 @@
 
 ## subsys_initcall(input_init)
 
+### subsys_initcall介绍
+
+* subsys_initcall是一个宏；
+* 功能：将声明的函数放到一个特定的段
+* 可以在 kernel/include/linux/init.h 查看各个 initcall 顺序
+
 ###  代码
 
 * kernel/include/linux/init.h
@@ -59,14 +65,6 @@ static initcall_t __initcall_input_init4
 ### 调度
 
 #### kernel链接脚本加载initcall
-
-* kernel/include/asm-generic/vmlinux.lds.h
-
-* kernel/arch/arm64/kernel/vmlinux.lds.S
-
-    
-
-#### kernel对initcall加载
 
 
 
@@ -128,23 +126,31 @@ gcc test.c -Wl,--verbose
 
 ## 内核链接脚本、映射文件
 
-* kernel/System.map：
+* kernel/System.map
 
     系统映射文件，内核中重要的变量（函数，全局变量等）在内核中的运行地址。
 
-* kernel/arch/arm64/kernel/vmlinux.lds
 
-    kernel/arch/arm64/kernel/vmlinux.lds.S
+* vmlinux.lds
+
+    Linux内核最终使用的链接脚本。用来分析Linux启动流程，通过链接脚本可以找到Linux内核第一行程序是从哪里执行。
+
+* vmlinux.lds.h、vmlinux.lds.S和vmlinux.s
+
+    *   vmlinux.lds.S
     
-    kernel/include/asm-generic/vmlinux.lds.h(vmlinux.lds.S包含的头文件)
+        是一个汇编文件，包含vmlinux.lds.h这个头文件，该汇编文件编译后生成vmlinux.s文件。
     
-    vmlinux.lds，是Linux内核的链接脚本文件。用来分析Linux启动流程，通过链接脚本可以找到Linux内核第一行程序是从哪里执行。
+*   kernel的链接脚本并不是直接提供的，⽽是提供了⼀个汇编⽂件vmlinux.lds.S，然后在编译的时候再去编译这个汇编⽂件得到真正的链接脚本vmlinux.lds。为什么linux kernel不直接提供vmlinux.lds⽽要提供⼀个vmlinux.lds.S然后在编译时才去动态⽣成vmlinux.lds呢？
+    .lds⽂件中只能写死，不能⽤条件编译。但是在kernel中链接脚本确实有条件编译的需求（但是lds格式⼜不⽀持），于是乎kernel⼯作者找了个投机取巧的⽅法，就是把vmlinux.lds写成汇编格式，然后汇编器处理的时候顺便条件编译给处理了，得到⼀个不需要条件编译的vmlinux.lds。
 
 ### kernel启动流程的两个阶段
 
 * 汇编阶段（另一篇分析）
 
 * C语言阶段
+
+    内核在启动过程中需要顺序的做很多事，内核如何实现按照先后顺序去做很多初始化操作。内核的解决方案就是给内核启动时要调用的所有函数归类，执行内核某一个函数然后每个类就会按照一定的次序被调用执行。这些分类名就叫.initcallx.init。x的值从1到8。内核开发者在编写内核代码时只要将函数设置合适的级别，这些函数就会被链接的时候放入特定的段，内核启动时再按照段顺序去依次执行各个段即可（通过某一个函数，链接脚本只是规定了某一程序段在内存中的存放位置）。
 
 
 
