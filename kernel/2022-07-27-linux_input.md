@@ -1,21 +1,23 @@
 # input子系统
 
-> subsys_initcall机制
+> 绕不过去的 xxx_initcall 机制
 >
-> 从init/mian初始化subsys
+> 链接脚本
 >
-> 内核initcall
+> 从 init/main 初始化subsys
+>
+> input 子系统分析
 
 
 ## subsys_initcall(input_init)
 
 ### subsys_initcall介绍
 
-* subsys_initcall是一个宏；
-* 功能：将声明的函数放到一个特定的段
-* 可以在 kernel/include/linux/init.h 查看各个 initcall 顺序
+* subsys_initcall是一个宏定义
+* 功能：将定义的函数指针变量放在一个特定的段
+* 在 kernel/include/linux/init.h 查看各个 initcall定义
 
-###  代码
+###  xxx_initcall 代码解析
 
 * kernel/include/linux/init.h
 
@@ -64,7 +66,9 @@ static initcall_t __initcall_input_init4
 
 ### 调度
 
-#### kernel链接脚本加载initcall
+kernel通过链接脚本组织initcall代码段，见 “内核链接脚本”
+
+kernel初始化过程中，调用链接脚本的变量进行initcall的初始化，见kernel.drawio
 
 
 
@@ -124,11 +128,17 @@ gcc test.c -Wl,--verbose
 ​	http://t.zoukankan.com/defen-p-5400492.html
 
 
-## 内核链接脚本、映射文件
+
+## 内核映射文件
 
 * kernel/System.map
 
-    系统映射文件，内核中重要的变量（函数，全局变量等）在内核中的运行地址。
+系统映射文件，内核中重要的变量（函数，全局变量等）在内核中的运行地址。
+
+
+
+
+## 内核链接脚本
 
 
 * vmlinux.lds
@@ -142,7 +152,9 @@ gcc test.c -Wl,--verbose
         是一个汇编文件，包含vmlinux.lds.h这个头文件，该汇编文件编译后生成vmlinux.s文件。
     
 *   kernel的链接脚本并不是直接提供的，⽽是提供了⼀个汇编⽂件vmlinux.lds.S，然后在编译的时候再去编译这个汇编⽂件得到真正的链接脚本vmlinux.lds。为什么linux kernel不直接提供vmlinux.lds⽽要提供⼀个vmlinux.lds.S然后在编译时才去动态⽣成vmlinux.lds呢？
-    .lds⽂件中只能写死，不能⽤条件编译。但是在kernel中链接脚本确实有条件编译的需求（但是lds格式⼜不⽀持），于是乎kernel⼯作者找了个投机取巧的⽅法，就是把vmlinux.lds写成汇编格式，然后汇编器处理的时候顺便条件编译给处理了，得到⼀个不需要条件编译的vmlinux.lds。
+    由于.lds⽂件中只能写死，不能⽤条件编译。但是在kernel中链接脚本确实有条件编译的需求（但是lds格式⼜不⽀持），于是乎kernel⼯作者找了个投机取巧的⽅法，就是把vmlinux.lds写成汇编格式，然后汇编器处理的时候顺便条件编译给处理了，得到⼀个不需要条件编译的vmlinux.lds。
+    
+    
 
 ### kernel启动流程的两个阶段
 
@@ -150,9 +162,11 @@ gcc test.c -Wl,--verbose
 
 * C语言阶段
 
-    内核在启动过程中需要顺序的做很多事，内核如何实现按照先后顺序去做很多初始化操作。内核的解决方案就是给内核启动时要调用的所有函数归类，执行内核某一个函数然后每个类就会按照一定的次序被调用执行。这些分类名就叫.initcallx.init。x的值从1到8。内核开发者在编写内核代码时只要将函数设置合适的级别，这些函数就会被链接的时候放入特定的段，内核启动时再按照段顺序去依次执行各个段即可（通过某一个函数，链接脚本只是规定了某一程序段在内存中的存放位置）。
+    ​		内核在启动过程中需要顺序的做很多事，内核如何实现按照先后顺序去做很多初始化操作。内核的解决方案就是给内核启动时要调用的所有函数归类，执行内核某一个函数然后每个类就会按照一定的次序被调用执行。这些分类名就叫.initcallx.init。x的值从1到8。内核开发者在编写内核代码时只要将函数设置合适的级别，这些函数就会被链接的时候放入特定的段，内核启动时再按照段顺序去依次执行各个段即可（通过某一个函数，链接脚本只是规定了某一程序段在内存中的存放位置）。
+    
+    
 
+## input子系统
 
-
-## kernel对input_init调用流程
+1. subsys_initcall(input_init) 初始化流程见 kernel.draw.io
 
