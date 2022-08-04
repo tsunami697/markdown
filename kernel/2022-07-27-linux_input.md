@@ -168,5 +168,25 @@ gcc test.c -Wl,--verbose
 
 ## input子系统
 
-1. subsys_initcall(input_init) 初始化流程见 kernel.draw.io
+### 核心层
+
+* driver/input/input.c
+
+```C
+// input.c 做了三件事
+1. 创建两个全局链表
+    static LIST_HEAD(input_dev_list);					// 定义全局链表 : input device
+    static LIST_HEAD(input_handler_list);				// 定义全局链表 : input handler
+2. input_init()
+    a. 创建节点/sys/class/input
+    b. 创建/proc/bus/input/devices、/proc/bus/input/handlers
+    c. 申请主设备号，主设备号INPUT_MAJOR == 13
+3. 提供handler、device层用到的api
+```
+
+* 内核对subsys_initcall(input_init) 初始化流程见 kernel.drawio
+
+### handler层
+
+### 设备驱动层
 
