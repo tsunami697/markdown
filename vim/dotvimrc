@@ -190,5 +190,4 @@ let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
 "-----------------------------------------------------指定ctags数据库文件-------------------------------------------------
 "In NetEase
 "set cscope.out file
-"cs add /home/liujq05/code/almond/hassi_codo_0715/RK3566-SDK/kernel/cscope.out
 
