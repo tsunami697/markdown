@@ -40,6 +40,13 @@ nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
 nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
 nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>
 
+"cscope生成文件，使用快捷键临时生效
+nmap <F10> :!find . -iname '*.c' -o -iname '*.cpp' -o -iname '*.h' -o -iname '*.hpp' > cscope.files ;<CR>
+	\:!cscope -b -i cscope.files -f cscope.out<CR>
+	\:cs add cscope.out<CR>
+	"\:cs kill -1<CR>:cs add cscope.out<CR>
+	"<CR>是回车的意思
+
 "------------------------------------------------------多窗口快捷键---------------------------------------------------------
 " 向右分屏
 map sl :set splitright<CR>:vsplit<CR>
