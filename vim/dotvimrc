@@ -59,6 +59,8 @@ map sj :set splitbelow<CR>:split<CR>
 
 "-------------------------------------------------------vundle插件设置----------------------------------------------------
 "vundle
+"使用前需要安装该插件
+"git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/
 filetype off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
