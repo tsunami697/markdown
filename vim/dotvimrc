@@ -105,12 +105,21 @@ highlight Comment ctermfg=green	"注释颜色
 "highlight Comment ctermbg=green
 "highlight Comment ctermbg=blue
 
+"-----------------------------------------------------编码设置-----------------------------------------------------------
+set fileencodings=utf-8,gb2312,gbk,gb18030
+"set termencoding=utf-8
+"set encoding=prc
+
+"-----------------------------------------------------NERDTree配置-----------------------------------------------------------
+"NERDTree开启快捷键
+map <F8> :NERDTree<CR>
+"默认开启
+autocmd VimEnter * NERDTree
+
 "-------------------------------------------------------快捷键------------------------------------------------------------
 nnoremap <F1> :set nonumber!<CR>:set foldcolumn=0<CR>
 nnoremap <F2> :set mouse=v<CR>
 nnoremap <F3> :set mouse=a<CR>
-"NERDTree开启快捷键
-map <F8> :NERDTree<CR>
 map <C-A> ggVG
 
 "gtrans
@@ -186,6 +195,7 @@ let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
 let g:gutentags_ctags_extra_args += ['--c++-kinds=+pxI']
 let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
 
+"这些都不用了，有自动生成的方法了
 "-----------------------------------------------------指定ctags数据库文件-------------------------------------------------
 "set ctags
 "In Dalian
