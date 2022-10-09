@@ -115,6 +115,7 @@ set fileencodings=utf-8,gb2312,gbk,gb18030
 map <F8> :NERDTree<CR>
 "默认开启
 autocmd VimEnter * NERDTree
+"在目录框使用shift+i显示隐藏文件
 
 "-------------------------------------------------------快捷键------------------------------------------------------------
 nnoremap <F1> :set nonumber!<CR>:set foldcolumn=0<CR>
